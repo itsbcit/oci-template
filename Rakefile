@@ -9,9 +9,10 @@ require 'open-uri'
 Dir.glob('lib/*.rb').each { |l| load l } if Dir.exist?('lib')
 Dir.glob('lib/*.rb').each { |l| load l } if Dir.exist?('local')
 
-puts("WARNING: metadata.yaml not found.") unless File.exist?('metadata.yaml')
+puts('WARNING: metadata.yaml not found.') unless File.exist?('metadata.yaml')
+puts('WARNING: Rakefile library not found.') unless File.exist?('lib')
 
-if File.exist?('metadata.yaml')
+if File.exist?('metadata.yaml') && File.exist?('lib')
   $metadata = YAML.safe_load(File.read('metadata.yaml'))
   $images = build_objects_array(
     metadata: $metadata,
@@ -21,7 +22,7 @@ end
 
 desc 'Install Rakefile support files'
 task :install do
-  open('https://github.com/itsbcit/docker-template/releases/latest/download/lib.zip') do |archive|
+  open('https://github.com/itsbcit/docker-rakefile/releases/latest/download/lib.zip') do |archive|
     FileUtils.remove_entry('lib') if File.exist?('lib')
     tempfile = Tempfile.new(['lib', '.zip'])
     File.open(tempfile.path, 'wb') do |f|
@@ -29,6 +30,15 @@ task :install do
     end
     system('unzip', tempfile.path)
     tempfile.unlink
+  end
+end
+
+desc 'Update Rakefile to latest release version'
+task :update do
+  open('https://github.com/itsbcit/docker-rakefile/releases/latest/download/Rakefile') do |rakefile|
+    File.open('Rakefile', 'wb') do |f|
+      f.write(rakefile.read)
+    end
   end
 end
 
