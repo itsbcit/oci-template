@@ -1,6 +1,7 @@
 ---
 image_name: template_test
-org_name: bcit
+registries:
+  - url: bcit.io
 labels:
   maintainer: "jesse@weisner.ca, chriswood.ca@gmail.com"
 vars:
